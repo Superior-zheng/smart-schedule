@@ -1,0 +1,48 @@
+
+# deepseek 配置
+deepseek:
+  enabled: true
+  api-key: ${DEEPSEEK_API_KEY:}
+  url: ${DEEPSEEK_API_URL:https://api.deepseek.com/chat/completions}
+
+forest:
+  connect-timeout: 30000  # 连接超时 30 秒
+  read-timeout: 30000     # 读取超时 30 秒
+
+# 服务器端口配置
+server:
+  port: 8080
+
+spring:
+  application:
+    name: smart-schedule
+
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 需要先创建 smart_schedule 数据库
+    url: jdbc:mysql://localhost:3306/smart_schedule?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+
+  # SQL 初始化配置 - 自动执行 schema.sql 创建表
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      continue-on-error: true
+
+  # MyBatis-Plus 配置
+  mybatis-plus:
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 开发环境打印 SQL 日志
+
+jwt:
+  # 生产环境必须设置环境变量 JWT_SECRET，使用至少64字符的随机字符串
+  # 可用命令生成: openssl rand -base64 64 | tr -d '\n'
+  secret: ${JWT_SECRET:aGg3N2RmZ2hqOThzZGZnaGo5OGFzZGZnaGo5OGFzZGZnaGo5OGFzZGZnaGo5OGFzZGY=}
+  expire-minutes: 10080 # 7天
+
+# CORS 跨域配置，生产环境请修改为实际前端域名
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
